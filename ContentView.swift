@@ -23,10 +23,10 @@ struct ContentView: View {
     var body: some View {
         VStack(spacing: 50) {
             if let bottle = bottles.first {
-                Text("ボトル容量: \(bottle.size) ml")
+                Text("Bottle size: \(bottle.size) ml")
                     .font(.title)
                     .fontWeight(.bold)
-                Button("編集") {
+                Button("Edit") {
                     showBottleEdit = true
                 }
                 .sheet(isPresented: $showBottleEdit) {
@@ -34,9 +34,14 @@ struct ContentView: View {
                         BottleEditView(bottle: $bottles[index])
                     }
                 }
+                .padding()
+                .background(Color.blue)
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+                .cornerRadius(10)
                 
                 // 今日の合計
-                Text("今日の合計: \(todayTotal()) ml")
+                Text("Today's total: \(todayTotal()) ml")
                     .font(.headline)
                     .onReceive(Timer.publish(every: 60, on: .main, in: .common).autoconnect()) { value in
                         now = value
@@ -45,7 +50,7 @@ struct ContentView: View {
                 
                 // 累計
                 let total = records.reduce(0) { $0 + $1.amount }
-                Text("累計: \(total) ml")
+                Text("Total: \(total) ml")
                     .font(.headline)
                 
                 // 節約額
@@ -57,7 +62,7 @@ struct ContentView: View {
                     let newRecord = DrinkRecord(date: Date(), amount: bottle.size)
                     records.append(newRecord)
                 }) {
-                    Text("飲み切った！")
+                    Text("DrinkUp!")
                         .font(.title2)
                         .fontWeight(.bold)
                         .padding()
@@ -81,12 +86,12 @@ struct ContentView: View {
             } else {
                 // 初回入力
                 VStack(spacing: 30) {
-                    Text("こんにちは！")
+                    Text("Welcome!")
                         .font(.title)
                         .fontWeight(.bold)
                         .foregroundColor(.white)
                     
-                    Text("水分補給量を簡単に記録できます！")
+                    Text("Need your bottle to start.")
                         .font(.title2)
                         .padding(16)
                         .background(Color.white.opacity(0.8))
@@ -108,12 +113,12 @@ struct ContentView: View {
                     .padding(16) // 余白を追加
                     .shadow(radius: 10) // ビューに影を追加
                 )
-                Text("ボトル容量(ml)を入力してください")
+                Text("Please fill your bottle size. (ml)")
                 TextField("300", text: $inputSize)
                     .keyboardType(.numberPad)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .frame(width: 200)
-                Button("保存") {
+                Button("Start") {
                     if let size = Int(inputSize) {
                         let newBottle = Bottle(size: size)
                         bottles = [newBottle]
@@ -121,6 +126,7 @@ struct ContentView: View {
                 }
                 .padding()
                 .background(Color.blue)
+                .fontWeight(.bold)
                 .foregroundColor(.white)
                 .cornerRadius(10)
             }

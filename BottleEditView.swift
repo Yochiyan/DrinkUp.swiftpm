@@ -10,35 +10,47 @@ struct BottleEditView: View {
     @Binding var bottle: Bottle
     @State private var inputSize: String = ""
     @Environment(\.dismiss) private var dismiss
+    @StateObject private var settings = AppSettings()
     
     var body: some View {
-        VStack(spacing: 20) {
-            Text("ボトル容量を変更")
-                .font(.title2)
-            
-            TextField("ml", text: $inputSize)
-                .keyboardType(.numberPad)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .frame(width: 200)
-            
-            Button("保存") {
-                if let size = Int(inputSize) {
-                    bottle.size = size
-                    dismiss()
-                }
+        Form {
+            Section {
+                Text("ボトル容量を変更")
+                    .font(.title2)
+                Text("Please fill your new bottle size. (ml)")
+                    .foregroundColor(.secondary)
             }
-            .padding()
-            .background(Color.blue)
-            .foregroundColor(.white)
-            .cornerRadius(10)
+
+            Section("ボトル設定") {
+                TextField("容量 (ml)", text: $inputSize)
+                    .keyboardType(.numberPad)
+            }
+            .listRowBackground(Color(.systemGroupedBackground))
+
+            Section("節約計算") {
+                TextField("水1本の価格（円）", value: $settings.waterPrice, format: .number)
+                    .keyboardType(.numberPad)
+            }.listRowBackground(Color(.black))
+
+            Section {
+                Button("Save") {
+                    if let size = Int(inputSize) {
+                        bottle.size = size
+                        dismiss()
+                    }
+                }
+                .listRowBackground(Color(.blue))
+                .frame(maxWidth: .infinity, alignment: .center)
+            }
         }
-        .padding()
         .onAppear {
             inputSize = "\(bottle.size)"
+            
         }
+        
     }
-}
 
+}
 #Preview {
     BottleEditPreviewWrapper()
 }
