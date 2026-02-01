@@ -10,27 +10,30 @@ struct BottleEditView: View {
     @Binding var bottle: Bottle
     @State private var inputSize: String = ""
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var settings = AppSettings()
+    @EnvironmentObject var settings: AppSettings
     
     var body: some View {
         Form {
             Section {
-                Text("ボトル容量を変更")
+                Text("Check or change your older.")
                     .font(.title2)
-                Text("Please fill your new bottle size. (ml)")
-                    .foregroundColor(.secondary)
+                    .bold()
             }
 
-            Section("ボトル設定") {
-                TextField("容量 (ml)", text: $inputSize)
+            Section("Bottle size(ml)") {
+                TextField("(ml)", text: $inputSize)
                     .keyboardType(.numberPad)
             }
-            .listRowBackground(Color(.systemGroupedBackground))
+            .foregroundColor(.secondary)
 
-            Section("節約計算") {
-                TextField("水1本の価格（円）", value: $settings.waterPrice, format: .number)
+            Section("Vending Price(¥)") {
+                TextField("",value: $settings.waterPrice, format: .number)
                     .keyboardType(.numberPad)
-            }.listRowBackground(Color(.black))
+            } .foregroundColor(.secondary)
+            
+            Section("Vending size(ml)") {
+                TextField("", value: $settings.vendingSize, format: .number) .keyboardType(.numberPad)
+            } .foregroundColor(.secondary)
 
             Section {
                 Button("Save") {
@@ -39,7 +42,9 @@ struct BottleEditView: View {
                         dismiss()
                     }
                 }
-                .listRowBackground(Color(.blue))
+                .listRowBackground(Color(red: 0/255, green: 120/255, blue: 255/255))
+                .foregroundColor(Color.white)
+                .bold()
                 .frame(maxWidth: .infinity, alignment: .center)
             }
         }
@@ -60,5 +65,7 @@ private struct BottleEditPreviewWrapper: View {
 
     var body: some View {
         BottleEditView(bottle: $sample)
+            .environmentObject(AppSettings())
     }
 }
+

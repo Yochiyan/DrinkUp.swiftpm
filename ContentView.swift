@@ -7,31 +7,32 @@
 
 import SwiftUI
 import Combine
-
+import SwiftData
 struct ContentView: View {
+    @StateObject private var settings = AppSettings()
     @State private var bottles: [Bottle] = []
     @State private var records: [DrinkRecord] = []
     @State private var inputSize = ""
     @State private var today = Date()
     @State private var now: Date = Date()
     @State private var showBottleEdit: Bool = false
-    
-    // 自販機価格（固定）
-    let vendingPricePer = 120
-    let vendingSize = 540
-    
+
+        
     var body: some View {
         VStack(spacing: 50) {
             if let bottle = bottles.first {
-                Text("Bottle size: \(bottle.size) ml")
+                Text("Bottle size: \(bottle.size)")
+                    .environment(\.locale, .current)
                     .font(.title)
                     .fontWeight(.bold)
                 Button("Edit") {
                     showBottleEdit = true
                 }
+                .environment(\.locale, .current)
                 .sheet(isPresented: $showBottleEdit) {
                     if let index = bottles.indices.first {
                         BottleEditView(bottle: $bottles[index])
+                            .environmentObject(settings)
                     }
                 }
                 .padding()
@@ -41,7 +42,8 @@ struct ContentView: View {
                 .cornerRadius(10)
                 
                 // 今日の合計
-                Text("Today's total: \(todayTotal()) ml")
+                Text("Today's total: \(todayTotal())ml")
+                    .environment(\.locale, .current)
                     .font(.headline)
                     .onReceive(Timer.publish(every: 60, on: .main, in: .common).autoconnect()) { value in
                         now = value
@@ -50,13 +52,16 @@ struct ContentView: View {
                 
                 // 累計
                 let total = records.reduce(0) { $0 + $1.amount }
-                Text("Total: \(total) ml")
+                Text("Total amount: \(total)ml")
                     .font(.headline)
+                    .environment(\.locale, .current)
                 
                 // 節約額
-                let saving = total * vendingPricePer / vendingSize
-                Text("累計節約額: ¥\(saving)")//いろはす540mlと比較して。
+                // 節約額
+                let saving = total * settings.waterPrice / settings.vendingSize
+                Text("Save: ¥\(saving)")
                     .font(.headline)
+                    .environment(\.locale, .current)
                 
                 Button(action: {
                     let newRecord = DrinkRecord(date: Date(), amount: bottle.size)
@@ -64,6 +69,7 @@ struct ContentView: View {
                 }) {
                     Text("DrinkUp!")
                         .font(.title2)
+                        .environment(\.locale, .current)
                         .fontWeight(.bold)
                         .padding()
                         .background(Color.blue)
@@ -87,12 +93,14 @@ struct ContentView: View {
                 // 初回入力
                 VStack(spacing: 30) {
                     Text("Welcome!")
+                        .environment(\.locale, .current)
                         .font(.title)
                         .fontWeight(.bold)
                         .foregroundColor(.white)
                     
-                    Text("Need your bottle to start.")
+                    Text("Prepare your bottle to start.")
                         .font(.title2)
+                        .environment(\.locale, .current)
                         .padding(16)
                         .background(Color.white.opacity(0.8))
                         .cornerRadius(10)
@@ -113,18 +121,20 @@ struct ContentView: View {
                     .padding(16) // 余白を追加
                     .shadow(radius: 10) // ビューに影を追加
                 )
-                Text("Please fill your bottle size. (ml)")
+                Text("Please fill in your bottle size.(ml)")
+                    .environment(\.locale, .current)
                 TextField("300", text: $inputSize)
                     .keyboardType(.numberPad)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .frame(width: 200)
-                Button("Start") {
+                Button("Start!") {
                     if let size = Int(inputSize) {
                         let newBottle = Bottle(size: size)
                         bottles = [newBottle]
                     }
                 }
                 .padding()
+                .environment(\.locale, .current)
                 .background(Color.blue)
                 .fontWeight(.bold)
                 .foregroundColor(.white)
