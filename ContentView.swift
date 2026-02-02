@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 import SwiftData
+import Foundation
 struct ContentView: View {
     @StateObject private var settings = AppSettings()
     @State private var bottles: [Bottle] = []
@@ -21,7 +22,7 @@ struct ContentView: View {
     var body: some View {
         VStack(spacing: 50) {
             if let bottle = bottles.first {
-                Text("Bottle size: \(bottle.size)")
+                Text("Bottle size: \(bottle.size)ml")
                     .environment(\.locale, .current)
                     .font(.title)
                     .fontWeight(.bold)
@@ -57,9 +58,8 @@ struct ContentView: View {
                     .environment(\.locale, .current)
                 
                 // 節約額
-                // 節約額
                 let saving = total * settings.waterPrice / settings.vendingSize
-                Text("Save: ¥\(saving)")
+                Text("Save money: ¥\(saving)")
                     .font(.headline)
                     .environment(\.locale, .current)
                 
