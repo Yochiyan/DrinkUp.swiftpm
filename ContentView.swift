@@ -59,7 +59,7 @@ struct ContentView: View {
                 
                 // 節約額
                 let saving = total * settings.waterPrice / settings.vendingSize
-                Text("Save money: ¥\(saving)")
+                Text("Save money: \(saving)¥")
                     .font(.headline)
                     .environment(\.locale, .current)
                 
@@ -75,6 +75,14 @@ struct ContentView: View {
                         .background(Color.blue)
                         .foregroundColor(.white)
                         .cornerRadius(10)
+                        .buttonStyle(.plain)
+                        .background(.ultraThinMaterial)
+                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .stroke(Color.white.opacity(0.35), lineWidth: 1)
+                        )
+                        .shadow(color: .black.opacity(0.2), radius: 10, y: 6)
                 }
                 
                 // 履歴リスト（簡易）
@@ -93,8 +101,9 @@ struct ContentView: View {
                 // 初回入力
                 VStack(spacing: 30) {
                     Text("Welcome!")
-                        .environment(\.locale, .current)
                         .font(.title)
+                        .font(.largeTitle)
+                        .environment(\.locale, .current)
                         .fontWeight(.bold)
                         .foregroundColor(.white)
                     
@@ -102,7 +111,7 @@ struct ContentView: View {
                         .font(.title2)
                         .environment(\.locale, .current)
                         .padding(16)
-                        .background(Color.white.opacity(0.8))
+                        .background(Color.white.opacity(0.5))
                         .cornerRadius(10)
                         .foregroundColor(.gray)
                     
@@ -123,6 +132,7 @@ struct ContentView: View {
                 )
                 Text("Please fill in your bottle size.(ml)")
                     .environment(\.locale, .current)
+                    .bold()
                 TextField("300", text: $inputSize)
                     .keyboardType(.numberPad)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -139,6 +149,14 @@ struct ContentView: View {
                 .fontWeight(.bold)
                 .foregroundColor(.white)
                 .cornerRadius(10)
+                .buttonStyle(.plain)
+                .background(.ultraThinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .stroke(Color.white.opacity(0.35), lineWidth: 1)
+                )
+                .shadow(color: .black.opacity(0.2), radius: 10, y: 6)
             }
         }
         .padding()

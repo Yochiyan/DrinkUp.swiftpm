@@ -29,3 +29,6 @@ final class AppSettings: ObservableObject {
     }
     
 }
+func reset() {
+    
+}

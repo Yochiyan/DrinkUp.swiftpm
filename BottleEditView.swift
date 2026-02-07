@@ -14,6 +14,7 @@ extension Notification.Name {
 struct BottleEditView: View {
     @Binding var bottle: Bottle
     @State private var inputSize: String = ""
+    @State private var showResetAlert: Bool = false
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var settings: AppSettings
     @Environment(\.colorScheme) private var colorScheme
@@ -32,21 +33,24 @@ struct BottleEditView: View {
                     .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
             }
             .foregroundColor(.secondary)
+            .bold()
             .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
             Section("Vending Price(¥)") {
                 TextField("",value: $settings.waterPrice, format: .number)
                     .keyboardType(.numberPad)
                     .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
+                    .bold()
                     
             } .foregroundColor(.secondary)
             
             Section("Vending size(ml)") {
                 TextField("", value: $settings.vendingSize, format: .number) .keyboardType(.numberPad)
                     .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
+                    .bold()
             } .foregroundColor(.secondary)
 
             Section {
-                Button("Save") {
+                Button("Save and close") {
                     if let size = Int(inputSize) {
                         bottle.size = size
                         NotificationCenter.default.post(name: .bottleDidUpdate, object: nil)
@@ -58,12 +62,41 @@ struct BottleEditView: View {
                 .bold()
                 .frame(maxWidth: .infinity, alignment: .center)
             }
+            Section {
+                Color.clear.frame(height: 80)
+                .listRowBackground(Color.clear)
+            }
+            Section {
+                Button(role: .destructive) {
+                    showResetAlert = true
+                } label: {
+                    Text("Reset app data")
+                }
+                .listRowBackground(Color(red: 255/255, green: 0/255, blue: 0/255))
+                .foregroundColor(Color.white)
+                .bold()
+                .frame(maxWidth: .infinity, alignment: .center)
+                .alert("Reset all data?", isPresented: $showResetAlert) {
+                    Button("Cancel", role: .cancel) {}
+                    Button("Reset", role: .destructive) {
+                        resetAllData()
+                    }
+                }
+            }
         }
         .onAppear {
             inputSize = "\(bottle.size)"
             
         }
         
+    }
+    
+    private func resetAllData() {
+        settings.waterPrice = 0
+        settings.vendingSize = 0
+        bottle.size = 0
+        inputSize = ""
+        dismiss()
     }
 
 }
