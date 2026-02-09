@@ -133,7 +133,7 @@ struct ContentView: View {
                 Text("Please fill in your bottle size.(ml)")
                     .environment(\.locale, .current)
                     .bold()
-                TextField("300", text: $inputSize)
+                TextField("Type here!", text: $inputSize,)
                     .keyboardType(.numberPad)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .frame(width: 200)

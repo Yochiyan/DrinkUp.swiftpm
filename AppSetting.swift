@@ -21,7 +21,7 @@ final class AppSettings: ObservableObject {
 
     init() {
         let saved = UserDefaults.standard.integer(forKey: "waterPrice")
-        self.waterPrice = saved == 0 ? 120 : saved
+        self.waterPrice = saved == 0 ? 120: saved
         
         let savedSize = UserDefaults.standard.integer(forKey: "vendingSize")
         self.vendingSize = savedSize == 0 ? 540 : savedSize

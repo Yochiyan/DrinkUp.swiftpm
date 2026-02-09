@@ -21,7 +21,7 @@ struct BottleEditView: View {
     
     var body: some View {
         Form {
-            Text("Check or change your older.")
+            Text("Check or change your order.")
                 .font(.title)
                 .bold()
                 .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
@@ -76,7 +76,7 @@ struct BottleEditView: View {
                 .foregroundColor(Color.white)
                 .bold()
                 .frame(maxWidth: .infinity, alignment: .center)
-                .alert("Reset all data?", isPresented: $showResetAlert) {
+                .alert("Do you want to reset all data?\nThis action cannot be undone.", isPresented: $showResetAlert) {
                     Button("Cancel", role: .cancel) {}
                     Button("Reset", role: .destructive) {
                         resetAllData()
