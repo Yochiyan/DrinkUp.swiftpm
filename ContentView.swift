@@ -17,10 +17,12 @@ struct ContentView: View {
     @State private var today = Date()
     @State private var now: Date = Date()
     @State private var showBottleEdit: Bool = false
+    @State private var showSavingInfo: Bool = false
 
         
     var body: some View {
         VStack(spacing: 50) {
+            
             if let bottle = bottles.first {
                 Text("Bottle size: \(bottle.size)ml")
                     .environment(\.locale, .current)
@@ -58,11 +60,28 @@ struct ContentView: View {
                     .environment(\.locale, .current)
                 
                 // 節約額
-                let saving = total * settings.waterPrice / settings.vendingSize
-                Text("Save money: \(saving)¥")
-                    .font(.headline)
-                    .environment(\.locale, .current)
+                let saving = settings.vendingSize > 0
+                    ? total * settings.waterPrice / settings.vendingSize
+                    : 0
                 
+                HStack(spacing: 8) {
+                    Text("Save money: \(saving)¥")
+                        .bold()
+                        .environment(\.locale, .current)
+                    Button {
+                        showSavingInfo = true
+                    } label: {
+                        Image(systemName: "info.circle")
+                            .imageScale(.medium)
+                    }
+                    .buttonStyle(.plain)
+                }
+                .alert("About Savings", isPresented: $showSavingInfo) {
+                    Button("OK", role: .cancel) {}
+                } message: {
+                    Text("Savings are calculated based on your vending price settings. Please tap the Edit button to set vending price and size.")
+                }
+                //DrinkUp! Button
                 Button(action: {
                     let newRecord = DrinkRecord(date: Date(), amount: bottle.size)
                     records.append(newRecord)
@@ -133,7 +152,7 @@ struct ContentView: View {
                 Text("Please fill in your bottle size.(ml)")
                     .environment(\.locale, .current)
                     .bold()
-                TextField("Type here!", text: $inputSize,)
+                TextField("Type here!", text: $inputSize)
                     .keyboardType(.numberPad)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .frame(width: 200)

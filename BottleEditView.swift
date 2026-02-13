@@ -63,22 +63,29 @@ struct BottleEditView: View {
                 .frame(maxWidth: .infinity, alignment: .center)
             }
             Section {
-                Color.clear.frame(height: 80)
+                Color.clear.frame(height: 50)
                 .listRowBackground(Color.clear)
             }
             Section {
                 Button(role: .destructive) {
                     showResetAlert = true
                 } label: {
-                    Text("Reset app data")
+                    Text("Reset all data")
+                        .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
+                        .bold()
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 30)
+                                .stroke(Color.red, lineWidth: 5)
+                        )
                 }
-                .listRowBackground(Color(red: 255/255, green: 0/255, blue: 0/255))
-                .foregroundColor(Color.white)
-                .bold()
-                .frame(maxWidth: .infinity, alignment: .center)
+                .buttonStyle(.plain)
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.clear)
                 .alert("Do you want to reset all data?\nThis action cannot be undone.", isPresented: $showResetAlert) {
                     Button("Cancel", role: .cancel) {}
-                    Button("Reset", role: .destructive) {
+                    Button("Continue", role: .destructive) {
                         resetAllData()
                     }
                 }
