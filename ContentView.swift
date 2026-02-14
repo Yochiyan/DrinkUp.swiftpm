@@ -18,6 +18,7 @@ struct ContentView: View {
     @State private var now: Date = Date()
     @State private var showBottleEdit: Bool = false
     @State private var showSavingInfo: Bool = false
+    @State private var showHistory: Bool = false
 
         
     var body: some View {
@@ -28,22 +29,48 @@ struct ContentView: View {
                     .environment(\.locale, .current)
                     .font(.title)
                     .fontWeight(.bold)
-                Button("Edit") {
-                    showBottleEdit = true
+                
+                HStack(spacing: 20) {
+                    //EDIT BUTTON
+                    Button("Edit") {
+                        showBottleEdit = true
+                    }
+                    .environment(\.locale, .current)
+                    .sheet(isPresented: $showBottleEdit) {
+                        if let index = bottles.indices.first {
+                            BottleEditView(bottle: $bottles[index])
+                                .environmentObject(settings)
+                        }
+                    }
+                    .padding()
+                    .background(Color.blue)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                    //History
+                    Button {
+                        showHistory = true
+                    } label: {
+                        Image(systemName: "calendar")
+                            .padding()
+                            .background(Color.blue)
+                            .font(.system(size: 20))
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
                 }
-                .environment(\.locale, .current)
                 .sheet(isPresented: $showBottleEdit) {
                     if let index = bottles.indices.first {
                         BottleEditView(bottle: $bottles[index])
                             .environmentObject(settings)
                     }
                 }
-                .padding()
-                .background(Color.blue)
-                .fontWeight(.bold)
-                .foregroundColor(.white)
-                .cornerRadius(10)
-                
+                .sheet(isPresented: $showHistory) {
+                    HistoryView(records: records)
+                }
+            
+            
                 // 今日の合計
                 Text("Today's total: \(todayTotal())ml")
                     .environment(\.locale, .current)
@@ -65,7 +92,7 @@ struct ContentView: View {
                     : 0
                 
                 HStack(spacing: 8) {
-                    Text("Save money: \(saving)¥")
+                    Text("Save money: ¥\(saving)")
                         .bold()
                         .environment(\.locale, .current)
                     Button {
@@ -76,10 +103,10 @@ struct ContentView: View {
                     }
                     .buttonStyle(.plain)
                 }
-                .alert("About Savings", isPresented: $showSavingInfo) {
+                .alert("About Save money", isPresented: $showSavingInfo) {
                     Button("OK", role: .cancel) {}
                 } message: {
-                    Text("Savings are calculated based on your vending price settings. Please tap the Edit button to set vending price and size.")
+                    Text("Save money are calculated based on your vending price settings.\nPlease tap the Edit button to set the vending price and size.")
                 }
                 //DrinkUp! Button
                 Button(action: {
