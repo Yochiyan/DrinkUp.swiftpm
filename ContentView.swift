@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
+import UIKit
 import Combine
-import SwiftData
 import Foundation
 struct ContentView: View {
     @StateObject private var settings = AppSettings()
@@ -32,34 +32,48 @@ struct ContentView: View {
                 
                 HStack(spacing: 20) {
                     //EDIT BUTTON
-                    Button("Edit") {
+                    Button {
                         showBottleEdit = true
+                    } label: {
+                        Text("Edit")
+                            .environment(\.locale, .current)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.blue)
+                            .cornerRadius(10)
                     }
-                    .environment(\.locale, .current)
-                    .sheet(isPresented: $showBottleEdit) {
-                        if let index = bottles.indices.first {
-                            BottleEditView(bottle: $bottles[index])
-                                .environmentObject(settings)
-                        }
-                    }
-                    .padding()
-                    .background(Color.blue)
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+                    .buttonStyle(.plain)
+                    .background(.ultraThinMaterial)
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .stroke(Color.white.opacity(0.35), lineWidth: 1)
+                    )
+                    .shadow(color: .black.opacity(0.2), radius: 10, y: 6)
                     //History
                     Button {
                         showHistory = true
                     } label: {
                         Image(systemName: "calendar")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
                             .padding()
                             .background(Color.blue)
-                            .font(.system(size: 20))
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
                             .cornerRadius(10)
+                            .buttonStyle(.plain)
+                            .background(.ultraThinMaterial)
+                            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                    .stroke(Color.white.opacity(0.35), lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.2), radius: 10, y: 6)
                     }
                 }
+                .frame(maxWidth: .infinity)
                 .sheet(isPresented: $showBottleEdit) {
                     if let index = bottles.indices.first {
                         BottleEditView(bottle: $bottles[index])
@@ -214,7 +228,13 @@ struct ContentView: View {
             today = Date()
         }
         .onAppear {
-            // If no bottle exists, keep initial state; otherwise ensure records are loaded (in-memory fallback).
+            loadData()
+        }
+        .onChange(of: bottles) { _ in
+            saveData()
+        }
+        .onChange(of: records) { _ in
+            saveData()
         }
     }
     
@@ -228,6 +248,27 @@ struct ContentView: View {
             .reduce(0) { $0 + $1.amount }
     }
     
+    // MARK: - UserDefaults Persistence
+    private func saveData() {
+        if let bottleData = try? JSONEncoder().encode(bottles) {
+            UserDefaults.standard.set(bottleData, forKey: "bottles")
+        }
+        if let recordData = try? JSONEncoder().encode(records) {
+            UserDefaults.standard.set(recordData, forKey: "records")
+        }
+    }
+
+    private func loadData() {
+        if let bottleData = UserDefaults.standard.data(forKey: "bottles"),
+           let decodedBottles = try? JSONDecoder().decode([Bottle].self, from: bottleData) {
+            bottles = decodedBottles
+        }
+
+        if let recordData = UserDefaults.standard.data(forKey: "records"),
+           let decodedRecords = try? JSONDecoder().decode([DrinkRecord].self, from: recordData) {
+            records = decodedRecords
+        }
+    }
 }
 #Preview {
     ContentView()

@@ -6,15 +6,10 @@
 //
 
 import Foundation
-import SwiftData
 
 
-class DrinkRecord {
+struct DrinkRecord: Identifiable, Codable, Equatable {
+    var id = UUID()
     var date: Date
     var amount: Int
-    
-    init(date: Date, amount: Int) {
-        self.date = date
-        self.amount = amount
-    }
 }

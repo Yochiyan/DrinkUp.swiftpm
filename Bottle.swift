@@ -6,13 +6,9 @@
 //
 
 import Foundation
-import SwiftData
 
 
-class Bottle {
+struct Bottle: Identifiable, Codable, Equatable {
+    var id = UUID()
     var size: Int
-    
-    init(size: Int) {
-        self.size = size
-    }
 }
