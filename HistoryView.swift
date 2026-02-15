@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 struct HistoryView: View {
+    @Environment(\.dismiss) private var dismiss
     var records: [DrinkRecord]
 
     var body: some View {
@@ -20,7 +21,7 @@ struct HistoryView: View {
                             Text(item.date.formatted(date: .complete, time: .omitted))
                                 .font(.headline)
 
-                            Text("Total: \(item.total) ml")
+                            Text("Total: \((item.total)) ml")
                                 .font(.title3)
                                 .bold()
                         }
@@ -34,8 +35,21 @@ struct HistoryView: View {
                 }
             }
             .navigationTitle("History")
+            .overlay(alignment: .bottomLeading) {
+                Button(action: { dismiss() }) {
+                    Image(systemName:"chevron.down")
+                        .bold()
+                        .padding()
+                        .background(Color.blue.opacity(0.8))
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                        .shadow(radius: 5)
+                }
+                .padding([.leading, .bottom], 16)
+            }
         }
     }
+    
 
     private func dailySummaries() -> [(date: Date, total: Int)] {
         let calendar = Calendar.current
@@ -97,3 +111,4 @@ struct HistoryView: View {
         }
     }
 }
+
