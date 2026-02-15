@@ -103,6 +103,12 @@ struct BottleEditView: View {
         settings.vendingSize = 0
         bottle.size = 0
         inputSize = ""
+
+        // Delete saved drink history
+        UserDefaults.standard.removeObject(forKey: "records")
+        UserDefaults.standard.removeObject(forKey: "bottles")
+        NotificationCenter.default.post(name: Notification.Name("didResetAllData"), object: nil)
+
         dismiss()
     }
 

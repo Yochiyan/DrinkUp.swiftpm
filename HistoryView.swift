@@ -14,14 +14,21 @@ struct HistoryView: View {
     var body: some View {
         NavigationStack {
             List {
-                ForEach(groupedByDate(), id: \.date) { item in
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(item.date.formatted(date: .complete, time: .omitted))
-                            .font(.headline)
+                ForEach(dailySummaries(), id: \.date) { item in
+                    HStack {
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text(item.date.formatted(date: .complete, time: .omitted))
+                                .font(.headline)
 
-                        Text("Total: \(item.total) ml")
-                            .font(.title3)
-                            .bold()
+                            Text("Total: \(item.total) ml")
+                                .font(.title3)
+                                .bold()
+                        }
+
+                        Spacer()
+
+                        // Stamp indicator
+                        stampView(for: item.total)
                     }
                     .padding(.vertical, 6)
                 }
@@ -30,15 +37,58 @@ struct HistoryView: View {
         }
     }
 
-    private func groupedByDate() -> [(date: Date, total: Int)] {
+    private func dailySummaries() -> [(date: Date, total: Int)] {
         let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
 
-        let grouped = Dictionary(grouping: records) {
-            calendar.startOfDay(for: $0.date)
+        guard let firstDate = records.map({ calendar.startOfDay(for: $0.date) }).min() else {
+            return []
         }
 
-        return grouped
-            .map { (date: $0.key, total: $0.value.reduce(0) { $0 + $1.amount }) }
-            .sorted { $0.date > $1.date }
+        var date = firstDate
+        var results: [(date: Date, total: Int)] = []
+
+        while date <= today {
+            let total = records
+                .filter { calendar.isDate($0.date, inSameDayAs: date) }
+                .reduce(0) { $0 + $1.amount }
+
+            results.append((date: date, total: total))
+
+            guard let next = calendar.date(byAdding: .day, value: 1, to: date) else { break }
+            date = next
+        }
+
+        return results.sorted { $0.date > $1.date }
+    }
+
+    
+    @ViewBuilder
+    private func stampView(for total: Int) -> some View {
+        if (0...499).contains(total) {
+            Image(systemName: "leaf")
+                .font(.system(size: 50))
+                .foregroundColor(.red)
+
+        } else if (500...799).contains(total) {
+            Image(systemName: "leaf.fill")
+                .font(.system(size: 50))
+                .foregroundColor(.yellow)
+
+        } else if (800...1199).contains(total) {
+            Image(systemName: "tree.fill")
+                .font(.system(size: 50))
+                .foregroundColor(.green)
+
+        } else if total >= 1200 {
+            Image(systemName: "trophy.fill")
+                .font(.system(size: 50))
+                .foregroundColor(Color(red: 1.0, green: 0.84, blue: 0.0))
+
+        } else {
+            Image(systemName: "questionmark.circle")
+                .font(.system(size: 36))
+                .foregroundColor(.gray)
+        }
     }
 }

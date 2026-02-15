@@ -35,8 +35,11 @@ struct ContentView: View {
                     Button {
                         showBottleEdit = true
                     } label: {
-                        Text("Edit")
+                        HStack{
+                        Image(systemName: "pencil")
+                            Text("Edit")
                             .font(.system(size: 20, weight: .bold))
+                    }
                             .environment(\.locale, .current)
                             .fontWeight(.bold)
                             .foregroundColor(.white)
@@ -53,12 +56,16 @@ struct ContentView: View {
                             .stroke(Color.white.opacity(0.35), lineWidth: 1)
                     )
                     .shadow(color: .black.opacity(0.2), radius: 10, y: 6)
+                    
                     //History
                     Button {
                         showHistory = true
                     } label: {
-                        Image(systemName: "calendar")
-                            .font(.system(size: 20, weight: .bold))
+                        HStack{
+                            Image(systemName: "calendar")
+                            Text("History")
+                                .font(.system(size: 20, weight: .bold))
+                        }
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding()
@@ -110,7 +117,7 @@ struct ContentView: View {
                     Button {
                         showSavingInfo = true
                     } label: {
-                        Image(systemName: "info.circle")
+                        Image(systemName: "info.bubble")
                             .imageScale(.medium)
                     }
                     .buttonStyle(.plain)
@@ -118,21 +125,31 @@ struct ContentView: View {
                 .alert("About Save money", isPresented: $showSavingInfo) {
                     Button("OK", role: .cancel) {}
                 } message: {
-                    Text("Save money are calculated based on your vending price settings.\nPlease tap the Edit button to set the vending price and size.")
+                    Text("Save money are calculated based on your sales price settings. \nIf you use this feature, tap the Edit button to set the sales price and size.")
                 }
                 
-                //インジゲータ
-                let count = todayCount()
+                //indicator
+                let totalToday = todayTotal()
 
-                HStack(spacing: 10) {
+                HStack(spacing: 40) {
                     Image(systemName: "leaf")
-                        .foregroundColor(count == 0 ? .red : .gray)
+                        .font(.system(size: 20, weight: .bold))
+                        .foregroundColor((0...499).contains(totalToday) ? .red : .gray)
 
                     Image(systemName: "leaf.fill")
-                        .foregroundColor(count == 1 ? .yellow : .gray)
+                        .font(.system(size: 20, weight: .bold))
+
+                        .foregroundColor((500...799).contains(totalToday) ? .yellow : .gray)
 
                     Image(systemName: "tree.fill")
-                        .foregroundColor(count >= 2 ? .green : .gray)
+                        .font(.system(size: 20, weight: .bold))
+
+                        .foregroundColor((800...1199).contains(totalToday) ? .green : .gray)
+                    
+                    Image(systemName: "trophy.fill")
+                        .font(.system(size: 20, weight: .bold))
+
+                        .foregroundColor(totalToday >= 1200 ? Color(red: 1.0, green: 0.84, blue: 0.0) : .gray)
                 }
             
             .environment(\.locale, .current)
@@ -147,7 +164,8 @@ struct ContentView: View {
                     records.append(newRecord)
                 }) {
                     Text("DrinkUp!")
-                        .font(.title2)
+                        
+                        .font(.system(size: 30, weight: .bold))
                         .environment(\.locale, .current)
                         .fontWeight(.bold)
                         .padding()
@@ -254,6 +272,10 @@ struct ContentView: View {
         }
         .onChange(of: records) { _ in
             saveData()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("didResetAllData"))) { _ in
+            records = []
+            bottles = []
         }
     }
     
