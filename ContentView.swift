@@ -22,7 +22,7 @@ struct ContentView: View {
 
         
     var body: some View {
-        VStack(spacing: 50) {
+        VStack(spacing: 40) {
             
             if let bottle = bottles.first {
                 Text("Bottle size: \(bottle.size)ml")
@@ -36,6 +36,7 @@ struct ContentView: View {
                         showBottleEdit = true
                     } label: {
                         Text("Edit")
+                            .font(.system(size: 20, weight: .bold))
                             .environment(\.locale, .current)
                             .fontWeight(.bold)
                             .foregroundColor(.white)
@@ -86,13 +87,10 @@ struct ContentView: View {
             
             
                 // 今日の合計
-                Text("Today's total: \(todayTotal())ml")
-                    .environment(\.locale, .current)
-                    .font(.headline)
-                    .onReceive(Timer.publish(every: 60, on: .main, in: .common).autoconnect()) { value in
-                        now = value
-                        today = value // keep “today” refreshed
-                    }
+                    Text("Today's total: \(todayTotal())ml")
+                        .font(.headline)
+        
+                
                 
                 // 累計
                 let total = records.reduce(0) { $0 + $1.amount }
@@ -122,6 +120,27 @@ struct ContentView: View {
                 } message: {
                     Text("Save money are calculated based on your vending price settings.\nPlease tap the Edit button to set the vending price and size.")
                 }
+                
+                //インジゲータ
+                let count = todayCount()
+
+                HStack(spacing: 10) {
+                    Image(systemName: "leaf")
+                        .foregroundColor(count == 0 ? .red : .gray)
+
+                    Image(systemName: "leaf.fill")
+                        .foregroundColor(count == 1 ? .yellow : .gray)
+
+                    Image(systemName: "tree.fill")
+                        .foregroundColor(count >= 2 ? .green : .gray)
+                }
+            
+            .environment(\.locale, .current)
+            .onReceive(Timer.publish(every: 60, on: .main, in: .common).autoconnect()) { value in
+                now = value
+                today = value
+            }
+                
                 //DrinkUp! Button
                 Button(action: {
                     let newRecord = DrinkRecord(date: Date(), amount: bottle.size)
@@ -246,6 +265,16 @@ struct ContentView: View {
         return records
             .filter { $0.date >= start && $0.date < end }
             .reduce(0) { $0 + $1.amount }
+    }
+    
+    private func todayCount() -> Int {
+        let cal = Calendar.current
+        let start = cal.startOfDay(for: today)
+        guard let end = cal.date(byAdding: .day, value: 1, to: start) else { return 0 }
+
+        return records
+            .filter { $0.date >= start && $0.date < end }
+            .count
     }
     
     // MARK: - UserDefaults Persistence
