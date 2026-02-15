@@ -128,6 +128,7 @@ struct ContentView: View {
                     Text("Save money are calculated based on your sales price settings. \nIf you use this feature, tap the Edit button to set the sales price and size.")
                 }
                 
+
                 //indicator
                 let totalToday = todayTotal()
 

@@ -67,26 +67,31 @@ struct HistoryView: View {
     private func stampView(for total: Int) -> some View {
         if (0...499).contains(total) {
             Image(systemName: "leaf")
+                .symbolRenderingMode(.hierarchical)
                 .font(.system(size: 50))
                 .foregroundColor(.red)
 
         } else if (500...799).contains(total) {
             Image(systemName: "leaf.fill")
+                .symbolRenderingMode(.hierarchical)
                 .font(.system(size: 50))
                 .foregroundColor(.yellow)
 
         } else if (800...1199).contains(total) {
             Image(systemName: "tree.fill")
+                .symbolRenderingMode(.hierarchical)
                 .font(.system(size: 50))
                 .foregroundColor(.green)
 
         } else if total >= 1200 {
             Image(systemName: "trophy.fill")
+                .symbolRenderingMode(.hierarchical)
                 .font(.system(size: 50))
                 .foregroundColor(Color(red: 1.0, green: 0.84, blue: 0.0))
 
         } else {
             Image(systemName: "questionmark.circle")
+                .symbolRenderingMode(.hierarchical)
                 .font(.system(size: 36))
                 .foregroundColor(.gray)
         }
