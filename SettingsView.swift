@@ -29,7 +29,7 @@ struct SettingsView: View {
                 .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
                 .listRowBackground(Color.clear)
             
-            Section("Bottle size(ml)") {
+            Section("Bottle capacity(ml)") {
                 TextField("(ml)", text: $inputSize)
                     .keyboardType(.numberPad)
                     .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
@@ -37,7 +37,7 @@ struct SettingsView: View {
             .foregroundColor(.secondary)
             .bold()
             .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
-            Section("Vending Price(¥)") {
+            Section("Price of a plastic bottle of water(¥)") {
                 TextField("",value: $settings.waterPrice, format: .number)
                     .keyboardType(.numberPad)
                     .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
@@ -45,7 +45,7 @@ struct SettingsView: View {
                     
             } .foregroundColor(.secondary)
             
-            Section("Vending size(ml)") {
+            Section("Plastic bottle capacity(ml)") {
                 TextField("", value: $settings.vendingSize, format: .number) .keyboardType(.numberPad)
                     .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
                     .bold()
@@ -111,8 +111,8 @@ struct SettingsView: View {
             }
         }
         .scrollDismissesKeyboard(.interactively)
-        //Bottle sizeで0以下の数字が入っている時
-        .alert("Invalid bottle size", isPresented: $showInputError) {
+        //Bottle capacityで0以下の数字が入っている時
+        .alert("Invalid bottle capacity", isPresented: $showInputError) {
             Button("OK", role: .cancel) { }
         } message: {
             Text("Please enter a valid number greater than 0.")

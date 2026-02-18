@@ -37,7 +37,7 @@ struct AboutView: View {
                         Text("Why I made this app")
                             .font(.headline)
                         
-                        Text("DrinkUp! is designed to help you track the water you drink from your bottle with just a few taps, helping you develop healthy hydration habits. \nIt's a simple and effective way to stay hydrated and make small, positive changes in your daily routine.")
+                        Text("DrinkUp! is designed to help you track the water you drink from your water bottle with just a few taps, helping you develop healthy hydration habits. \nIt's a simple and effective way to stay hydrated and make small, positive changes in your daily routine.")
                     }
                     
                     Group {

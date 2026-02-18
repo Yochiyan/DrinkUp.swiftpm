@@ -103,7 +103,7 @@ struct ContentView: View {
         .alert("About Save money", isPresented: $showSavingInfo) {
             Button("OK", role: .cancel) {}
         } message: {
-            Text("Save money are calculated based on your sales price settings. \nIf you use this feature, tap the Edit button to set the sales price and size.")
+            Text("This will show you how much you've saved by filling your water bottle instead of buying water.\nTo use this feature, you'll need to register the price and capacity in Settings..")
         }
     }
 
@@ -207,7 +207,7 @@ struct ContentView: View {
                 .fontWeight(.bold)
                 .foregroundColor(.white)
 
-            Text("Prepare your bottle to start.")
+            Text("Prepare your water bottle to start.")
                 .font(.title2)
                 .environment(\.locale, .current)
                 .padding(16)
@@ -226,7 +226,7 @@ struct ContentView: View {
             .shadow(radius: 10)
         )
 
-        Text("Please fill in your bottle size.(ml)")
+        Text("Please fill in your water bottle capacity.(ml)")
             .environment(\.locale, .current)
             .bold()
 
