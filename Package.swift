@@ -8,13 +8,13 @@ import PackageDescription
 import AppleProductTypes
 
 let package = Package(
-    name: "DrinkUp",
+    name: "DrinkUp!",
     platforms: [
         .iOS("16.0")
     ],
     products: [
         .iOSApplication(
-            name: "DrinkUp",
+            name: "DrinkUp!",
             targets: ["AppModule"],
             bundleIdentifier: "yochiyan.DrinkUp",
             teamIdentifier: "2S8Z65233V",

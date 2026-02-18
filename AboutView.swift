@@ -9,6 +9,8 @@ import Foundation
 import SwiftUI
 
 struct AboutView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.dismiss) private var dismiss
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -17,6 +19,17 @@ struct AboutView: View {
                     Text("About DrinkUp!")
                         .font(.largeTitle)
                         .bold()
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .multilineTextAlignment(.center)
+                    
+                    // App Icon Display
+                    Image(colorScheme == .dark ? "AppIconDark" : "AppIconLight")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: 180)
+                        .cornerRadius(40)
+                        .shadow(radius: 10)
+                        .frame(maxWidth: .infinity, alignment: .center)
                     
                     Divider()
                     
@@ -24,32 +37,38 @@ struct AboutView: View {
                         Text("Why I made this app")
                             .font(.headline)
                         
-                        Text("DrinkUp! is designed to help people build a healthy hydration habit by consciously tracking the water they drink from their own bottle.")
-                    }
-                    
-                    Group {
-                        Text("Achievement System")
-                            .font(.headline)
-                        
-                        VStack(alignment: .leading, spacing: 8) {
-                            Label("0–499ml  : Leaf", systemImage: "leaf")
-                            Label("500–799ml : Leaf Fill", systemImage: "leaf.fill")
-                            Label("800–1199ml : Tree", systemImage: "tree.fill")
-                            Label("1200ml+ : Trophy", systemImage: "trophy.fill")
-                        }
+                        Text("DrinkUp! is designed to help you track the water you drink from your bottle with just a few taps, helping you develop healthy hydration habits. \nIt's a simple and effective way to stay hydrated and make small, positive changes in your daily routine.")
                     }
                     
                     Group {
                         Text("About the Developer")
                             .font(.headline)
                         
-                        Text("Created by よっちゃん as a Swift Student Challenge project. Focused on simple interaction and strong visual feedback.")
+                        Text("Created by Yoshihisa Kashima\n")
+                    }
+                    Group {
+                        Text("ATTENTION!")
+                            .font(.headline)
+                        Text("Actual water requirements vary by gender and body type, so please do not rely excessively on this app's achievement system.\n\n\n")
+                            .foregroundStyle(.secondary)
                     }
                 }
                 .padding()
             }
-            .navigationTitle("About")
+            .navigationTitle("About DrinkUp!")
             .navigationBarTitleDisplayMode(.inline)
+            .overlay(alignment: .bottomLeading) {
+                Button(action: { dismiss() }) {
+                    Image(systemName:"chevron.down")
+                        .bold()
+                        .padding()
+                        .background(Color.blue.opacity(0.8))
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                        .shadow(radius: 5)
+                }
+                .padding([.leading, .bottom], 16)
+            }
         }
     }
 }

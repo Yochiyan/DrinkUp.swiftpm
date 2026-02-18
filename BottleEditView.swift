@@ -14,7 +14,9 @@ extension Notification.Name {
 struct BottleEditView: View {
     @Binding var bottle: Bottle
     @State private var inputSize: String = ""
+    @State private var showInputError: Bool = false
     @State private var showResetAlert: Bool = false
+    @State private var showAboutSheet: Bool = false
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var settings: AppSettings
     @Environment(\.colorScheme) private var colorScheme
@@ -51,10 +53,13 @@ struct BottleEditView: View {
 
             Section {
                 Button("Save and close") {
-                    if let size = Int(inputSize) {
-                        bottle.size = size
-                        NotificationCenter.default.post(name: .bottleDidUpdate, object: nil)
+                    guard let size = Int(inputSize), size > 0 else {
+                        showInputError = true
+                        return
                     }
+
+                    bottle.size = size
+                    NotificationCenter.default.post(name: .bottleDidUpdate, object: nil)
                     dismiss()
                 }
                 .listRowBackground(Color(red: 0/255, green: 120/255, blue: 255/255))
@@ -63,7 +68,21 @@ struct BottleEditView: View {
                 .frame(maxWidth: .infinity, alignment: .center)
             }
             Section {
-                Color.clear.frame(height: 50)
+                Button {
+                    showAboutSheet = true
+                } label: {
+                    Text("About DrinkUp!")
+                        .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
+                        .bold()
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 30)
+                                .stroke(Color.blue, lineWidth: 5)
+                        )
+                }
+                .buttonStyle(.plain)
+                .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)
             }
             Section {
@@ -91,11 +110,19 @@ struct BottleEditView: View {
                 }
             }
         }
+        .scrollDismissesKeyboard(.interactively)
+        //Bottle sizeで0以下の数字が入っている時
+        .alert("Invalid bottle size", isPresented: $showInputError) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Please enter a valid number greater than 0.")
+        }
         .onAppear {
             inputSize = "\(bottle.size)"
-            
         }
-        
+        .sheet(isPresented: $showAboutSheet) {
+            AboutView()
+        }
     }
     
     private func resetAllData() {
@@ -125,4 +152,3 @@ private struct BottleEditPreviewWrapper: View {
             .environmentObject(AppSettings())
     }
 }
-

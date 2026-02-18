@@ -7,19 +7,23 @@
 
 import SwiftUI
 import CoreData
+import UIKit
 
 @main
-struct DrinkUp: App {
-
-    let persistenceController = PersistenceController.shared
-
+struct DrinkUpApp: App {
+    
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environment(
-                    \.managedObjectContext,
-                     persistenceController.container.viewContext
-                )
         }
+    }
+}
+
+class AppDelegate: NSObject, UIApplicationDelegate {
+    func application(_ application: UIApplication,
+                     supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        return .portrait
     }
 }
