@@ -37,8 +37,8 @@ struct ContentView: View {
                 showBottleEdit = true
             } label: {
                 HStack {
-                    Image(systemName: "pencil")
-                    Text("Edit")
+                    Image(systemName: "gear")
+                    Text("Settings")
                         .font(.system(size: 20, weight: .bold))
                 }
                 .environment(\.locale, .current)
