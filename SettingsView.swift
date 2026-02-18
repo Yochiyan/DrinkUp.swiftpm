@@ -11,7 +11,7 @@ extension Notification.Name {
     static let bottleDidUpdate = Notification.Name("bottleDidUpdate")
 }
 
-struct BottleEditView: View {
+struct SettingsView: View {
     @Binding var bottle: Bottle
     @State private var inputSize: String = ""
     @State private var showInputError: Bool = false
@@ -148,7 +148,7 @@ private struct BottleEditPreviewWrapper: View {
     @State private var sample = Bottle(size: 500)
 
     var body: some View {
-        BottleEditView(bottle: $sample)
+        SettingsView(bottle: $sample)
             .environmentObject(AppSettings())
     }
 }

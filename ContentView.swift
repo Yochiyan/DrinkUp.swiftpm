@@ -16,10 +16,12 @@ struct ContentView: View {
     @State private var inputSize = ""
     @State private var today = Date()
     @State private var now: Date = Date()
-    @State private var showBottleEdit: Bool = false
+    @State private var showSettings: Bool = false
     @State private var showSavingInfo: Bool = false
     @State private var showHistory: Bool = false
     @State private var showAchievementSystemView: Bool = false
+    @State private var showCustomAddSheet: Bool = false
+    @State private var customAddInput: String = ""
 
     // MARK: - Subviews to reduce type-checking complexity
     @ViewBuilder
@@ -34,7 +36,7 @@ struct ContentView: View {
     private func ActionButtons() -> some View {
         HStack(spacing: 20) {
             Button {
-                showBottleEdit = true
+                showSettings = true
             } label: {
                 HStack {
                     Image(systemName: "gear")
@@ -130,6 +132,7 @@ struct ContentView: View {
     }
 
     @ViewBuilder
+    //+ml Button
     private func AddButton(bottle: Bottle) -> some View {
         Button(action: {
             let impact = UIImpactFeedbackGenerator(style: .medium)
@@ -154,6 +157,31 @@ struct ContentView: View {
                 .stroke(Color.white.opacity(0.35), lineWidth: 1)
         )
         .shadow(color: .black.opacity(0.2), radius: 10, y: 6)
+        .simultaneousGesture(
+            LongPressGesture(minimumDuration: 0.5)
+                .onEnded { _ in
+                    customAddInput = ""
+                    showCustomAddSheet = true
+                }
+        )
+        .alert("Did you drink from the cup?", isPresented: $showCustomAddSheet) {
+            TextField("\(bottle.size)ml", text: $customAddInput)
+                .keyboardType(.numberPad)
+            Button("Cancel", role: .cancel) {
+                customAddInput = ""
+            }
+            Button("Add") {
+                if let value = Int(customAddInput), value > 0 {
+                    let impact = UIImpactFeedbackGenerator(style: .medium)
+                    impact.impactOccurred()
+                    let record = DrinkRecord(date: Date(), amount: value)
+                    records.append(record)
+                }
+                customAddInput = ""
+            }
+        } message: {
+            Text("Enter the amount you just drank.(ml)")
+        }
     }
 
     @ViewBuilder
@@ -236,9 +264,9 @@ struct ContentView: View {
                 HeaderView(bottle: bottle)
 
                 ActionButtons()
-                    .fullScreenCover(isPresented: $showBottleEdit) {
+                    .fullScreenCover(isPresented: $showSettings) {
                         if let index = bottles.indices.first {
-                            BottleEditView(bottle: $bottles[index])
+                            SettingsView(bottle: $bottles[index])
                                 .environmentObject(settings)
                         }
                     }
@@ -279,6 +307,10 @@ struct ContentView: View {
                 .buttonStyle(.plain)
 
                 AddButton(bottle: bottle)
+                Text("Tap to add • Long press for custom amount")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                    .multilineTextAlignment(.center)
 
                 RecordsList()
             } else {
