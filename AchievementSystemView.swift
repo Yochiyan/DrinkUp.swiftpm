@@ -81,12 +81,12 @@ struct AchievementSystemView: View {
                     
                     
                     
-                    Text("ATTENTION!\nAccording to Japan's Ministry of Health, Labour and Welfare, the minimum daily water intake for adults is 1.2 litres. Actual requirements vary depending on gender and body size. Therefore, do not rely too heavily on this guideline.\n")
+                    Text("ATTENTION!\nAccording to Japan's Ministry of Health, Labour and Welfare, the minimum daily water intake for adults is 1.2 liters. Actual requirements vary depending on gender and body size. Therefore, do not rely too heavily on this guideline.\n")
                         .foregroundStyle(.secondary)
                 }
                 .padding()
             }
-            .navigationTitle("Achievements")
+            .navigationTitle("Achievement System")
             .navigationBarTitleDisplayMode(.inline)
             .overlay(alignment: .bottomLeading) {
                 Button(action: { dismiss() }) {

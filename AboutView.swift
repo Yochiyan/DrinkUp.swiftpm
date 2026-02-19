@@ -50,7 +50,6 @@ struct AboutView: View {
                         Text("ATTENTION!")
                             .font(.headline)
                         Text("Actual water requirements vary by gender and body type, so please do not rely excessively on this app's achievement system.\n\n\n")
-                            .foregroundStyle(.secondary)
                     }
                 }
                 .padding()

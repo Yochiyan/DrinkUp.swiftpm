@@ -29,7 +29,7 @@ struct SettingsView: View {
                 .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
                 .listRowBackground(Color.clear)
             
-            Section("Bottle capacity(ml)") {
+            Section("Bottle Capacity (ml)") {
                 TextField("(ml)", text: $inputSize)
                     .keyboardType(.numberPad)
                     .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
@@ -37,7 +37,7 @@ struct SettingsView: View {
             .foregroundColor(.secondary)
             .bold()
             .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
-            Section("Price of a plastic bottle of water(¥)") {
+            Section("Price of a Plastic Bottle of Water (¥)") {
                 TextField("",value: $settings.waterPrice, format: .number)
                     .keyboardType(.numberPad)
                     .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
@@ -45,7 +45,7 @@ struct SettingsView: View {
                     
             } .foregroundColor(.secondary)
             
-            Section("Plastic bottle capacity(ml)") {
+            Section("Plastic Bottle Capacity (ml)") {
                 TextField("", value: $settings.vendingSize, format: .number) .keyboardType(.numberPad)
                     .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
                     .bold()

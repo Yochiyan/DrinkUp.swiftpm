@@ -26,7 +26,7 @@ struct ContentView: View {
     // MARK: - Subviews to reduce type-checking complexity
     @ViewBuilder
     private func HeaderView(bottle: Bottle) -> some View {
-        Text("Bottle size: \(bottle.size)ml")
+        Text("Bottle Size: \(bottle.size)ml")
             .environment(\.locale, .current)
             .font(.title)
             .fontWeight(.bold)
@@ -87,10 +87,11 @@ struct ContentView: View {
     }
 
     @ViewBuilder
+    //Money Saved
     private func SavingsView(total: Int) -> some View {
         let saving = settings.vendingSize > 0 ? total * settings.waterPrice / settings.vendingSize : 0
         HStack(spacing: 8) {
-            Text("Save money: ¥\(saving)")
+            Text("Money Saved: ¥\(saving)")
                 .bold()
                 .environment(\.locale, .current)
             Button { showSavingInfo = true } label: {
@@ -100,7 +101,7 @@ struct ContentView: View {
             .buttonStyle(.plain)
             .foregroundStyle(.blue)
         }
-        .alert("About Save money", isPresented: $showSavingInfo) {
+        .alert("About Money Saved", isPresented: $showSavingInfo) {
             Button("OK", role: .cancel) {}
         } message: {
             Text("This will show you how much you've saved by filling your water bottle instead of buying water.\nTo use this feature, you'll need to register the price and capacity in Settings..")
@@ -108,6 +109,7 @@ struct ContentView: View {
     }
 
     @ViewBuilder
+    //Achivement System
     private func IndicatorView(totalToday: Int) -> some View {
         HStack(spacing: 40) {
             Image(systemName: "leaf")
@@ -164,7 +166,7 @@ struct ContentView: View {
                     showCustomAddSheet = true
                 }
         )
-        .alert("Did you drink from the cup?", isPresented: $showCustomAddSheet) {
+        .alert("Drinking from something else?", isPresented: $showCustomAddSheet) {
             TextField("\(bottle.size)ml", text: $customAddInput)
                 .keyboardType(.numberPad)
             Button("Cancel", role: .cancel) {
@@ -178,9 +180,10 @@ struct ContentView: View {
                     records.append(record)
                 }
                 customAddInput = ""
+
             }
         } message: {
-            Text("Enter the amount you just drank.(ml)")
+            Text("How much did you drink?")
         }
     }
 
@@ -198,6 +201,7 @@ struct ContentView: View {
     }
     
     @ViewBuilder
+    //WelcomeView
     private func WelcomeView() -> some View {
         VStack(spacing: 30) {
             Text("Welcome!")
@@ -273,12 +277,12 @@ struct ContentView: View {
                     .sheet(isPresented: $showHistory) {
                         HistoryView(records: records)
                     }
-
-                Text("Today's total: \(todayTotal())ml")
+                //Information
+                Text("Today's Total: \(todayTotal())ml")
                     .font(.headline)
 
                 let total = records.reduce(0) { $0 + $1.amount }
-                Text("Total amount: \(total)ml")
+                Text("Lifetime Total: \(total)ml")
                     .font(.headline)
                     .environment(\.locale, .current)
 
@@ -303,11 +307,12 @@ struct ContentView: View {
                     .padding(.horizontal, 10)
                     .background(.ultraThinMaterial)
                     .clipShape(Capsule())
+                    //Achievement System explain
                 }
                 .buttonStyle(.plain)
 
                 AddButton(bottle: bottle)
-                Text("Tap to add • Long press for custom amount")
+                Text("Tap to add • Long press for custom entry")
                     .font(.caption)
                     .foregroundColor(.gray)
                     .multilineTextAlignment(.center)
@@ -318,7 +323,7 @@ struct ContentView: View {
             }
         }
         .padding()
-        // アプリがフォアグラウンドに戻ったら日付を更新
+        //Update
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             today = Date()
         }
@@ -344,7 +349,7 @@ struct ContentView: View {
         }
     }
     
-    // 今日の合計を算出
+    // Today's Total
     private func todayTotal() -> Int {
         let cal = Calendar.current
         let start = cal.startOfDay(for: today)
