@@ -1,4 +1,7 @@
 # DrinkUp!
+<!-- README.md の冒頭 -->
+[English](./README.md) | [日本語]
+
 
 DrinkUp! は、水分補給習慣をシンプルにサポートするアプリです。
 
